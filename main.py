@@ -1,54 +1,76 @@
+import numpy as np
+from numpy import random
 import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA, TruncatedSVD
-from random_points import *
+from sklearn.decomposition import PCA, TruncatedSVD, KernelPCA, SparsePCA
+import math
 
 limit = 3
 plot_limits = [-limit, limit]
-n = 10
-random_points_3d, random_points_2d = random_points_gen(n)
+q = 20  # quantity of random points to generate
+
+
+def points_in_circum(r, n=50):  # generate points on the circumference of a circle
+    pi = math.pi
+    return [[math.cos(2*pi/n*x)*r, math.sin(2*pi/n*x)*r] for x in range(0, n+1)]
+
+
+def points_gen(n=50):
+    points2d = random.rand(n, 2)  # uniform distribution
+    points2d = np.append(random.normal(scale=1.0, size=n).reshape(n, 1),  # normal distribution
+                         random.normal(scale=0.5, size=n).reshape(n, 1), axis=1)
+    points2d = np.array(points_in_circum(1.0, n-1))  # points on circle
+    points3d = np.append(points2d, np.zeros(n).reshape(n, 1), axis=1)
+    a = (random.rand() - 0.5) * 5
+    b = (random.rand() - 0.5) * 5
+    c = random.rand()
+    points3d[:, 2] = a * points3d[:, 0] + b * points3d[:, 1] + c
+    return points3d, points2d
+
+
+def plot_2d(points_2d, title):
+    fig = plt.figure()
+    ax = fig.add_subplot()
+    ax.scatter(points_2d[:, 0], points_2d[:, 1])
+    plt.xlim(plot_limits)
+    plt.ylim(plot_limits)
+    plt.grid()
+    plt.title(title)
+
+
+# generating random points
+random_points_3d, random_points_2d = points_gen(q)
 
 # 3D plot
-fig = plt.figure()
-ax = fig.add_subplot(projection='3d')
-ax.scatter(random_points_3d[:, 0], random_points_3d[:, 1], random_points_3d[:, 2])
+fig3d = plt.figure()
+ax3d = fig3d.add_subplot(projection='3d')
+ax3d.scatter(random_points_3d[:, 0], random_points_3d[:, 1], random_points_3d[:, 2])
 plt.title('3D')
-ax.set_xlim3d(plot_limits)
-ax.set_ylim3d(plot_limits)
-ax.set_zlim3d(plot_limits)
-
-pca = PCA(n_components=2)
-points_2d_pca = pca.fit_transform(random_points_3d)
-
-svd = TruncatedSVD(n_components=2)
-points_2d_svd = svd.fit_transform(random_points_3d)
-
+ax3d.set_xlim3d(plot_limits)
+ax3d.set_ylim3d(plot_limits)
+ax3d.set_zlim3d(plot_limits)
 
 # Original points on 2d plane plot
-fig = plt.figure()
-ax = fig.add_subplot()
-ax.scatter(random_points_2d[:, 0], random_points_2d[:, 1])
-plt.xlim(plot_limits)
-plt.ylim(plot_limits)
-plt.grid()
-plt.title('Original')
+plot_2d(random_points_2d, 'Original')
 
 # PCA points on 2d plane plot
-fig = plt.figure()
-ax = fig.add_subplot()
-ax.scatter(points_2d_pca[:, 0], points_2d_pca[:, 1])
-plt.xlim(plot_limits)
-plt.ylim(plot_limits)
-plt.grid()
-plt.title('PCA')
+pca = PCA(n_components=2)
+points_2d_pca = pca.fit_transform(random_points_3d)
+plot_2d(points_2d_pca, 'PCA')
 
-# SVD points on 2d plane plot
-fig = plt.figure()
-ax = fig.add_subplot()
-ax.scatter(points_2d_svd[:, 0], points_2d_svd[:, 1])
-plt.xlim(plot_limits)
-plt.ylim(plot_limits)
-plt.grid()
-plt.title('SVD')
+# Truncated SVD (LSA) points on 2d plane plot
+svd = TruncatedSVD(n_components=2)
+points_2d_svd = svd.fit_transform(random_points_3d)
+plot_2d(points_2d_svd, 'Truncated SVD')
+
+# Kernel PCA
+k_pca = KernelPCA(n_components=2)
+points_2d_k_pca = k_pca.fit_transform(random_points_3d)
+plot_2d(points_2d_k_pca, 'Kernel PCA')
+
+# Sparse PCA
+s_pca = SparsePCA(n_components=2)
+points_2d_s_pca = s_pca.fit_transform(random_points_3d)
+plot_2d(points_2d_s_pca, 'Sparse PCA')
 
 plt.show()
 
