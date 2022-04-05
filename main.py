@@ -3,6 +3,7 @@ from numpy import random
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA, TruncatedSVD, KernelPCA, SparsePCA
 import math
+from scipy.spatial.transform import Rotation as R
 
 limit = 3
 plot_limits = [-limit, limit]
@@ -15,15 +16,20 @@ def points_in_circum(r, n=50):  # generate points on the circumference of a circ
 
 
 def points_gen(n=50):
+    # choose one type of generated points
     points2d = random.rand(n, 2)  # uniform distribution
     points2d = np.append(random.normal(scale=1.0, size=n).reshape(n, 1),  # normal distribution
                          random.normal(scale=0.5, size=n).reshape(n, 1), axis=1)
-    points2d = np.array(points_in_circum(1.0, n-1))  # points on circle
+    points2d = np.array(points_in_circum(2.0, n-1))  # points on circle
+
     points3d = np.append(points2d, np.zeros(n).reshape(n, 1), axis=1)
     a = (random.rand() - 0.5) * 5
     b = (random.rand() - 0.5) * 5
     c = random.rand()
-    points3d[:, 2] = a * math.cos(points3d[:, 0]) + b * points3d[:, 1] + c
+    r = R.from_euler('xyz', ((random.rand()-0.5)*90, (random.rand()-0.5)*90,
+                             (random.rand()-0.5)*90), degrees=True)  # rotation of the points on a plane
+    points3d[:, 2] = c
+    points3d = r.apply(points3d)
     return points3d, points2d
 
 
