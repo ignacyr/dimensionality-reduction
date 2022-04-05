@@ -23,7 +23,7 @@ def points_gen(n=50):
     a = (random.rand() - 0.5) * 5
     b = (random.rand() - 0.5) * 5
     c = random.rand()
-    points3d[:, 2] = a * points3d[:, 0] + b * points3d[:, 1] + c
+    points3d[:, 2] = a * math.cos(points3d[:, 0]) + b * points3d[:, 1] + c
     return points3d, points2d
 
 
