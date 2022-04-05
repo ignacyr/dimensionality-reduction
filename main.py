@@ -11,7 +11,6 @@ points = np.append(random_points, np.zeros(n).reshape(n, 1), axis=1)
 
 A = (random.rand() - 0.5) * 5
 B = (random.rand() - 0.5) * 5
-B = 0
 C = random.rand()
 points[:, 2] = A * points[:, 0] + B * points[:, 1] + C
 
@@ -30,16 +29,15 @@ print(points2.shape)
 fig = plt.figure()
 ax = fig.add_subplot()
 ax.scatter(points2[:, 0], points2[:, 1])
-plt.xlim(-1, 1)
-plt.ylim(-1, 1)
+plt.xlim(-8, 8)
+plt.ylim(-8, 8)
 plt.grid()
-
 
 fig = plt.figure()
 ax = fig.add_subplot()
 ax.scatter(random_points[:, 0], random_points[:, 1])
-plt.xlim(-1, 1)
-plt.ylim(-1, 1)
+plt.xlim(-8, 8)
+plt.ylim(-8, 8)
 plt.grid()
 
 
