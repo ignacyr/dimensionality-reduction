@@ -19,7 +19,7 @@ def points_gen(n=50, type='circum'):
                              random.normal(scale=0.5, size=n).reshape(n, 1), axis=1)
     elif type == 'circum':
         points2d = np.array(points_in_circum(2.0, n-1))  # points on circle
-
+    #
     points3d = np.append(points2d, np.zeros(n).reshape(n, 1), axis=1)
     c = random.rand()
     r = Rotation.from_euler('xyz', ((random.rand()-0.5)*90, (random.rand()-0.5)*90,
