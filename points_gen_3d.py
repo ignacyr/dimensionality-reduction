@@ -30,7 +30,7 @@ def points_gen(n=50, figure_type='circum'):
     return points3d, points2d
 
 
-def plot_2d(points_2d, title=None, plot_limits=[-3, 3]):
+def plot_2d(points_2d, title=None, plot_limits=(-3, 3)):
     fig = plt.figure()
     ax = fig.add_subplot()
     ax.scatter(points_2d[:, 0], points_2d[:, 1])

@@ -6,7 +6,7 @@ import points_gen_3d as pg3d
 
 def main():
     limit = 3
-    plot_limits = [-limit, limit]
+    plot_limits = (-limit, limit)
     q = 20  # quantity of random points to generate
 
     # generating random points
