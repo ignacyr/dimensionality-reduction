@@ -10,14 +10,15 @@ def points_in_circum(r, n=50):  # generate points on the circumference of a circ
     return [[math.cos(2*pi/n*x)*r, math.sin(2*pi/n*x)*r] for x in range(0, n+1)]
 
 
-def points_gen(n=50, type='circum'):
+def points_gen(n=50, figure_type='circum'):
+    points2d = {}
     # choose one type of generated points
-    if type == 'uniform':
+    if figure_type == 'uniform':
         points2d = random.rand(n, 2)  # uniform distribution
-    elif type == 'normal':
+    elif figure_type == 'normal':
         points2d = np.append(random.normal(scale=1.0, size=n).reshape(n, 1),  # normal distribution
                              random.normal(scale=0.5, size=n).reshape(n, 1), axis=1)
-    elif type == 'circum':
+    elif figure_type == 'circum':
         points2d = np.array(points_in_circum(2.0, n-1))  # points on circle
     #
     points3d = np.append(points2d, np.zeros(n).reshape(n, 1), axis=1)
